@@ -1,16 +1,71 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Search, Send, Lightbulb } from 'lucide-react';
+import { io, Socket } from 'socket.io-client';
+import { educationalJokes } from '@/lib/jokes';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import StatsCard from '@/components/StatsCard';
 import { categories as categoriesDb, attempts as attemptsDb, questions as questionsDb } from '@/lib/db';
 import type { Category, QuizAttempt, DashboardStats } from '@/types';
+import { motion } from 'framer-motion';
+import CategoryIcon from '@/components/CategoryIcon';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0 }
+};
 
 export default function Dashboard() {
   const { user } = useAuth();
   const [cats, setCats] = useState<Category[]>([]);
   const [history, setHistory] = useState<QuizAttempt[]>([]);
   const [stats, setStats] = useState<DashboardStats>({ totalQuizzes: 0, avgScore: 0, bestScore: 0, bestCategory: '-', totalCorrect: 0, totalQuestions: 0 });
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  // Real-time Chat States
+  const [chatHistory, setChatHistory] = useState<{id: string, username: string, text: string, time: string}[]>([]);
+  const [chatMessage, setChatMessage] = useState('');
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:3001');
+    setSocket(newSocket);
+
+    newSocket.on('connect', () => setIsConnected(true));
+    newSocket.on('disconnect', () => setIsConnected(false));
+
+    newSocket.on('chat_history', (historyList) => {
+      setChatHistory(historyList);
+    });
+
+    newSocket.on('receive_message', (msg) => {
+      setChatHistory(prev => {
+        const updated = [...prev, msg];
+        return updated.length > 50 ? updated.slice(updated.length - 50) : updated;
+      });
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  const sendChatMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatMessage.trim() || !socket) return;
+    socket.emit('send_message', { username: user?.name, text: chatMessage.trim() });
+    setChatMessage('');
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -47,71 +102,181 @@ export default function Dashboard() {
 
   const getCategoryName = (id: string) => cats.find(c => c.id === id)?.name || 'Unknown';
 
+  const [currentJoke, setCurrentJoke] = useState(educationalJokes[0]);
+
+  useEffect(() => {
+    // Generate a random joke every 60 seconds
+    const jokeInterval = setInterval(() => {
+      setCurrentJoke(educationalJokes[Math.floor(Math.random() * educationalJokes.length)]);
+    }, 60000);
+    return () => clearInterval(jokeInterval);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Welcome back, {user?.name}!</p>
-        </div>
+      <div className="container mx-auto px-4 py-8 space-y-10">
+        <motion.div initial="hidden" animate="visible" variants={containerVariants}>
+          <motion.h1 variants={itemVariants} className="text-4xl font-extrabold text-foreground tracking-tight">Dashboard</motion.h1>
+          <motion.p variants={itemVariants} className="text-lg text-muted-foreground mt-2">Welcome back, {user?.name}!</motion.p>
+        </motion.div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatsCard title="Quizzes Taken" value={stats.totalQuizzes} icon="📝" />
-          <StatsCard title="Average Score" value={`${stats.avgScore}%`} icon="📊" />
-          <StatsCard title="Best Score" value={`${stats.bestScore}%`} icon="🏆" />
-          <StatsCard title="Best Category" value={stats.bestCategory} icon="⭐" />
+        {/* Top Section: Overview & Real-time */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Left Column: Stats & Goal */}
+          <div className="lg:col-span-2 space-y-8">
+            <motion.div initial="hidden" animate="visible" variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <motion.div variants={itemVariants}><StatsCard title="Quizzes Taken" value={stats.totalQuizzes} icon="📝" /></motion.div>
+              <motion.div variants={itemVariants}><StatsCard title="Average Score" value={`${stats.avgScore}%`} icon="📊" /></motion.div>
+              <motion.div variants={itemVariants}><StatsCard title="Best Score" value={`${stats.bestScore}%`} icon="🏆" /></motion.div>
+              <motion.div variants={itemVariants}><StatsCard title="Best Category" value={stats.bestCategory} icon="⭐" /></motion.div>
+            </motion.div>
+
+            {/* Programmer Joke of the Minute */}
+            <motion.div initial="hidden" animate="visible" variants={containerVariants}>
+              <motion.div variants={itemVariants} className="bg-card border-2 border-border/80 rounded-2xl p-6 shadow-sm relative overflow-hidden flex flex-col justify-center min-h-[140px]">
+                <div className="flex justify-between items-center mb-3 relative z-10">
+                  <h3 className="font-bold text-foreground text-lg flex items-center gap-2">
+                    <Lightbulb className="w-5 h-5 text-primary" /> Programmer Humor
+                  </h3>
+                  <span className="text-[10px] bg-primary/10 text-primary px-2.5 py-1 rounded-full font-extrabold uppercase tracking-widest">
+                    Updates every min
+                  </span>
+                </div>
+                <div className="relative z-10">
+                  <motion.p 
+                    key={currentJoke}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, type: 'spring' }}
+                    className="text-foreground/80 text-md italic font-medium leading-relaxed"
+                  >
+                    "{currentJoke}"
+                  </motion.p>
+                </div>
+                <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* Right Column: Live Chat */}
+          <motion.div initial="hidden" animate="visible" variants={containerVariants} className="lg:col-span-1 border-2 border-border/80 rounded-2xl bg-card shadow-sm relative flex flex-col h-[400px]">
+              <div className="flex justify-between items-center p-4 border-b border-border/50 relative z-10 shrink-0">
+                <h3 className="font-bold text-foreground text-lg">Global Chat</h3>
+                <div className="flex items-center space-x-2 bg-emerald-500/10 px-2.5 py-1 rounded-full">
+                  <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]' : 'bg-red-500'}`}></div>
+                  <span className={`text-[10px] font-extrabold uppercase tracking-widest ${isConnected ? 'text-emerald-500' : 'text-red-500'}`}>
+                    {isConnected ? 'Online' : 'Offline'}
+                  </span>
+                </div>
+              </div>
+              <div className="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col relative z-10" style={{ flexDirection: 'column-reverse' }}>
+                <div className="flex flex-col space-y-3">
+                  {chatHistory.length === 0 ? (
+                    <div className="m-auto text-sm text-muted-foreground py-10">No messages yet. Be the first!</div>
+                  ) : (
+                    chatHistory.map((msg) => (
+                      <div key={msg.id} className="flex flex-col">
+                        <div className="flex items-baseline space-x-2">
+                          <span className="font-bold text-xs text-primary">{msg.username}</span>
+                          <span className="text-[10px] text-muted-foreground">{msg.time}</span>
+                        </div>
+                        <div className="bg-muted/50 w-fit max-w-[90%] px-3 py-2 rounded-xl rounded-tl-none mt-1 shadow-sm text-sm text-card-foreground">
+                          {msg.text}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+              <form onSubmit={sendChatMessage} className="p-3 border-t border-border/50 shrink-0 flex items-center space-x-2 z-10">
+                <input
+                  type="text"
+                  value={chatMessage}
+                  onChange={(e) => setChatMessage(e.target.value)}
+                  placeholder="Type a message..."
+                  className="flex-1 bg-muted/30 border border-border/60 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-primary/50"
+                />
+                <button 
+                  type="submit" 
+                  disabled={!chatMessage.trim() || !isConnected}
+                  className="bg-primary text-primary-foreground p-2 rounded-full hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </form>
+          </motion.div>
         </div>
 
         {/* Categories */}
-        <div>
-          <h2 className="text-xl font-semibold text-foreground mb-4">Start a Quiz</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {cats.map(cat => (
-              <Link
-                key={cat.id}
-                to={`/quiz/${cat.id}`}
-                className="rounded-xl border border-border bg-card p-6 hover:shadow-lg hover:border-primary/50 transition-all group"
-              >
-                <span className="text-4xl block mb-3">{cat.icon}</span>
-                <h3 className="text-lg font-semibold text-card-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
-                <p className="text-sm text-muted-foreground mt-1">{cat.description}</p>
-                <p className="text-xs text-muted-foreground mt-3">{cat.questionCount} questions</p>
-              </Link>
+        <motion.div initial="hidden" animate="visible" variants={containerVariants} className="pt-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <motion.h2 variants={itemVariants} className="text-2xl font-bold text-foreground">Start a Quiz</motion.h2>
+            <motion.div variants={itemVariants} className="relative w-full sm:w-72">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search subjects..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-card border-2 border-border/80 rounded-xl text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all font-medium placeholder:text-muted-foreground/70"
+              />
+            </motion.div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {cats.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()) || c.description.toLowerCase().includes(searchQuery.toLowerCase())).map(cat => (
+              <motion.div key={cat.id} variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} transition={{ type: "spring", stiffness: 300 }}>
+                <Link
+                  to={`/quiz/${cat.id}`}
+                  className="block h-full rounded-2xl border-2 border-border/80 bg-card p-6 hover:shadow-lg hover:border-primary/50 transition-all group"
+                >
+                  <CategoryIcon 
+                    icon={cat.icon} 
+                    className="text-4xl h-[40px] w-auto block mb-4 drop-shadow-sm transition-transform group-hover:scale-110 group-hover:-rotate-3 duration-300 origin-bottom-left" 
+                  />
+                  <h3 className="text-lg font-bold text-card-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{cat.description}</p>
+                  <div className="mt-4 inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary">
+                    {cat.questionCount} questions
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* History */}
         {history.length > 0 && (
-          <div>
-            <h2 className="text-xl font-semibold text-foreground mb-4">Recent Attempts</h2>
-            <div className="rounded-lg border border-border overflow-hidden">
+          <motion.div initial="hidden" animate="visible" variants={containerVariants} className="pt-6">
+            <motion.h2 variants={itemVariants} className="text-2xl font-bold text-foreground mb-6">Recent Attempts</motion.h2>
+            <motion.div variants={itemVariants} className="rounded-2xl border-2 border-border/80 overflow-hidden bg-card/60 backdrop-blur-md shadow-sm">
               <table className="w-full text-sm">
-                <thead className="bg-muted">
+                <thead className="bg-muted/80 backdrop-blur-sm border-b border-border">
                   <tr>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Category</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Score</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground hidden sm:table-cell">Correct</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground hidden md:table-cell">Time</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Date</th>
+                    <th className="text-left p-4 font-semibold text-muted-foreground">Category</th>
+                    <th className="text-left p-4 font-semibold text-muted-foreground">Score</th>
+                    <th className="text-left p-4 font-semibold text-muted-foreground hidden sm:table-cell">Correct</th>
+                    <th className="text-left p-4 font-semibold text-muted-foreground hidden md:table-cell">Time</th>
+                    <th className="text-left p-4 font-semibold text-muted-foreground">Date</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-border/50">
                   {history.slice(0, 10).map(a => (
-                    <tr key={a.id} className="border-t border-border hover:bg-muted/50">
-                      <td className="p-3 text-foreground">{getCategoryName(a.categoryId)}</td>
-                      <td className="p-3 font-semibold text-foreground">{a.score}/{a.totalQuestions}</td>
-                      <td className="p-3 text-foreground hidden sm:table-cell">{a.correctAnswers}/{a.totalQuestions}</td>
-                      <td className="p-3 text-muted-foreground hidden md:table-cell">{Math.floor(a.timeTaken / 60)}m {a.timeTaken % 60}s</td>
-                      <td className="p-3 text-muted-foreground">{new Date(a.submittedAt).toLocaleDateString()}</td>
+                    <tr key={a.id} className="hover:bg-muted/30 transition-colors">
+                      <td className="p-4 font-medium text-card-foreground">{getCategoryName(a.categoryId)}</td>
+                      <td className="p-4 font-bold text-primary">{a.score}/{a.totalQuestions}</td>
+                      <td className="p-4 text-card-foreground hidden sm:table-cell">{a.correctAnswers}/{a.totalQuestions}</td>
+                      <td className="p-4 text-muted-foreground hidden md:table-cell">{Math.floor(a.timeTaken / 60)}m {a.timeTaken % 60}s</td>
+                      <td className="p-4 text-muted-foreground">{new Date(a.submittedAt).toLocaleDateString()}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </div>

@@ -7,6 +7,7 @@ import QuizTimer from '@/components/QuizTimer';
 import QuestionCard from '@/components/QuestionCard';
 import QuestionPalette from '@/components/QuestionPalette';
 import { categories as categoriesDb } from '@/lib/db';
+import CategoryIcon from '@/components/CategoryIcon';
 
 const QUIZ_TIME = 600; // 10 minutes
 
@@ -75,7 +76,10 @@ export default function Quiz() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-xl font-bold text-foreground">{category.icon} {category.name} Quiz</h1>
+            <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
+              <CategoryIcon icon={category.icon} className="h-6 w-auto" />
+              {category.name} Quiz
+            </h1>
             <p className="text-sm text-muted-foreground">Question {quiz.currentIndex + 1} of {quiz.totalQuestions}</p>
           </div>
         </div>

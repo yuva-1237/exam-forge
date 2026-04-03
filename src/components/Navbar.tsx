@@ -18,7 +18,7 @@ export default function Navbar() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-bold text-xl text-primary">
           <span className="text-2xl">🧠</span>
-          <span>MCQ Pro</span>
+          <span>Exam Forge</span>
         </Link>
 
         {/* Desktop */}

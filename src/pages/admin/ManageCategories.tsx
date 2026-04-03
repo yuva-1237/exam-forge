@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import type { Category } from '@/types';
+import CategoryIcon from '@/components/CategoryIcon';
 
 export default function ManageCategories() {
   const [cats, setCats] = useState<Category[]>([]);
@@ -61,8 +62,8 @@ export default function ManageCategories() {
               <Input value={description} onChange={e => setDescription(e.target.value)} maxLength={200} placeholder="Short description" />
             </div>
             <div className="space-y-2">
-              <Label>Icon (emoji)</Label>
-              <Input value={icon} onChange={e => setIcon(e.target.value)} maxLength={4} placeholder="📚" />
+              <Label>Icon (URL or emoji)</Label>
+              <Input value={icon} onChange={e => setIcon(e.target.value)} placeholder="https://... or 📚" />
             </div>
           </div>
           <div className="flex gap-2">
@@ -90,7 +91,9 @@ export default function ManageCategories() {
             <tbody>
               {cats.map(c => (
                 <tr key={c.id} className="border-t border-border hover:bg-muted/50">
-                  <td className="p-3 text-2xl">{c.icon}</td>
+                  <td className="p-3 text-2xl">
+                    <CategoryIcon icon={c.icon} className="h-8 w-auto text-center" />
+                  </td>
                   <td className="p-3 font-medium text-foreground">{c.name}</td>
                   <td className="p-3 text-muted-foreground hidden sm:table-cell">{c.description}</td>
                   <td className="p-3">
