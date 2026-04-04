@@ -8,7 +8,7 @@ import { categories as categoriesDb, attempts as attemptsDb, questions as questi
 import type { Category, QuizAttempt, DashboardStats } from '@/types';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import CategoryIcon from '@/components/CategoryIcon';
-import { useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
