@@ -143,28 +143,28 @@ export default function Dashboard() {
               <span className="text-3xl">📝</span>
               <div>
                 <div className="text-3xl font-black text-foreground leading-none mb-1">{stats.totalQuizzes}</div>
-                <div className="text-[10px] uppercase font-black tracking-widest text-muted-foreground/30">Total Quizzes</div>
+                <div className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Total Quizzes</div>
               </div>
             </motion.div>
             <motion.div variants={itemVariants} className="glass-card p-6 rounded-3xl flex flex-col justify-between">
               <span className="text-3xl">📊</span>
               <div>
                 <div className="text-3xl font-black text-foreground leading-none mb-1">{stats.avgScore}%</div>
-                <div className="text-[10px] uppercase font-black tracking-widest text-muted-foreground/30">Avg. Accuracy</div>
+                <div className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Avg. Accuracy</div>
               </div>
             </motion.div>
             <motion.div variants={itemVariants} className="glass-card p-6 rounded-3xl flex flex-col justify-between">
               <span className="text-3xl">🏆</span>
               <div>
                 <div className="text-3xl font-black text-foreground leading-none mb-1">{stats.bestScore}%</div>
-                <div className="text-[10px] uppercase font-black tracking-widest text-muted-foreground/30">Best Score</div>
+                <div className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Best Score</div>
               </div>
             </motion.div>
             <motion.div variants={itemVariants} className="glass-card p-6 rounded-3xl flex flex-col justify-between overflow-hidden">
               <span className="text-3xl">⭐</span>
               <div>
                 <div className="text-xl font-black text-foreground leading-tight mb-1 truncate">{stats.bestCategory}</div>
-                <div className="text-[10px] uppercase font-black tracking-widest text-muted-foreground/30">Top Subject</div>
+                <div className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Top Subject</div>
               </div>
             </motion.div>
           </div>
@@ -196,18 +196,18 @@ export default function Dashboard() {
                 <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_hsl(var(--primary))]" />
                 Live Network
               </h3>
-              <span className="text-[10px] text-muted-foreground/50 font-bold">{isConnected ? 'ONLINE' : 'CONNECTING...'}</span>
+              <span className="text-[10px] text-muted-foreground/70 font-bold">{isConnected ? 'ONLINE' : 'CONNECTING...'}</span>
             </div>
             <div className="flex-1 p-6 overflow-y-auto space-y-4 flex flex-col-reverse custom-scrollbar">
                <div className="flex flex-col space-y-4">
                   {chatHistory.length === 0 ? (
-                    <div className="m-auto text-sm text-muted-foreground/20 italic font-light">No active transmissions...</div>
+                    <div className="m-auto text-sm text-muted-foreground/60 italic font-light">No active transmissions...</div>
                   ) : (
                     chatHistory.map((msg) => (
                       <div key={msg.id} className="group">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-black text-[10px] text-primary group-hover:text-glow transition-all uppercase tracking-tighter">{msg.username}</span>
-                          <span className="text-[9px] text-muted-foreground/30">{msg.time}</span>
+                          <span className="text-[9px] text-muted-foreground/50">{msg.time}</span>
                         </div>
                         <div className="bg-background/40 border border-border/10 px-4 py-2.5 rounded-2xl rounded-tl-none text-sm text-foreground/70 leading-relaxed shadow-sm">
                           {msg.text}
@@ -224,7 +224,7 @@ export default function Dashboard() {
                   value={chatMessage}
                   onChange={(e) => setChatMessage(e.target.value)}
                   placeholder="Broadcast message..."
-                  className="w-full bg-background/50 border border-border/20 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:border-primary/40 focus:bg-background/60 transition-all text-foreground placeholder:text-muted-foreground/30 shadow-inner"
+                  className="w-full bg-background/50 border border-border/20 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:border-primary/40 focus:bg-background/60 transition-all text-foreground placeholder:text-muted-foreground/60 shadow-inner"
                 />
                 <button 
                   type="submit" 
@@ -242,13 +242,13 @@ export default function Dashboard() {
             <div className="flex flex-col sm:flex-row justify-between items-end gap-4">
               <h2 className="text-3xl font-black text-foreground tracking-tight">Available Forging Tracks</h2>
               <div className="relative w-full sm:w-80">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/40" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
                 <input
                   type="text"
                   placeholder="Filter subjects..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-background/40 border border-border/10 rounded-2xl text-sm focus:outline-none focus:border-primary/30 transition-all text-foreground placeholder:text-muted-foreground/30 font-medium shadow-sm"
+                  className="w-full pl-12 pr-4 py-3 bg-background/40 border border-border/20 rounded-2xl text-sm focus:outline-none focus:border-primary/30 transition-all text-foreground placeholder:text-muted-foreground/60 font-medium shadow-sm"
                 />
               </div>
             </div>
@@ -271,7 +271,7 @@ export default function Dashboard() {
                     <p className="text-muted-foreground text-sm font-light leading-relaxed line-clamp-2">{cat.description}</p>
                     <div className="mt-6 flex items-center justify-between">
                        <span className="text-[10px] font-black uppercase bg-primary/20 text-primary px-3 py-1 rounded-full">{cat.questionCount} Qs</span>
-                       <span className="text-[10px] font-black uppercase text-muted-foreground/40 group-hover:text-primary transition-all">Start Track →</span>
+                       <span className="text-[10px] font-black uppercase text-muted-foreground group-hover:text-primary transition-all">Start Track →</span>
                     </div>
                   </Link>
                 </motion.div>
@@ -289,12 +289,12 @@ export default function Dashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-background/40 border-b border-border/10">
-                      <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">Category</th>
-                      <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">Performance</th>
-                      <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 hidden sm:table-cell">Metrics</th>
-                      <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 hidden md:table-cell">Duration</th>
-                      <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">Timestamp</th>
+                    <tr className="bg-background/20 border-b border-border/10">
+                      <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Category</th>
+                      <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Performance</th>
+                      <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground hidden sm:table-cell">Metrics</th>
+                      <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground hidden md:table-cell">Duration</th>
+                      <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Timestamp</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/10">
@@ -311,7 +311,7 @@ export default function Dashboard() {
                         </td>
                         <td className="p-6 text-muted-foreground font-light hidden sm:table-cell">{a.correctAnswers} / {a.totalQuestions} Hits</td>
                         <td className="p-6 text-muted-foreground font-light hidden md:table-cell">{Math.floor(a.timeTaken / 60)}m {a.timeTaken % 60}s</td>
-                        <td className="p-6 text-muted-foreground/40 font-bold text-xs">{new Date(a.submittedAt).toLocaleDateString()}</td>
+                        <td className="p-6 text-muted-foreground/60 font-bold text-xs">{new Date(a.submittedAt).toLocaleDateString()}</td>
                       </tr>
                     ))}
                   </tbody>

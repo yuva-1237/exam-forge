@@ -71,21 +71,21 @@ export default function Register() {
             className="glass-card p-10 rounded-[2.5rem] space-y-5 shadow-2xl"
           >
             <div className="space-y-1">
-              <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 ml-1">Full Designation</Label>
-              <Input id="name" placeholder="John Doe" value={name} onChange={e => setName(e.target.value)} required minLength={2} maxLength={100} className="bg-background/20 border-border/10 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all font-medium text-foreground" />
+              <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full Designation</Label>
+              <Input id="name" placeholder="John Doe" value={name} onChange={e => setName(e.target.value)} required minLength={2} maxLength={100} className="bg-background/20 border-border rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all font-medium text-foreground" />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 ml-1">Access Channel (Email)</Label>
-              <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required maxLength={255} className="bg-background/20 border-border/10 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all text-foreground" />
+              <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Access Channel (Email)</Label>
+              <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required maxLength={255} className="bg-background/20 border-border rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all text-foreground" />
             </div>
             <div className="grid grid-cols-1 gap-4">
               <div className="space-y-1">
-                <Label htmlFor="password" title="Encryption Key (Password)" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 ml-1">Security Key</Label>
-                <Input id="password" type="password" placeholder="Min 8 chars" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} maxLength={128} className="bg-background/20 border-border/10 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all font-mono text-foreground" />
+                <Label htmlFor="password" title="Encryption Key (Password)" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Security Key</Label>
+                <Input id="password" type="password" placeholder="Min 8 chars" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} maxLength={128} className="bg-background/20 border-border rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all font-mono text-foreground" />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="confirm" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 ml-1">Confirm Identity</Label>
-                <Input id="confirm" type="password" placeholder="Re-enter key" value={confirm} onChange={e => setConfirm(e.target.value)} required className="bg-background/20 border-border/10 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all font-mono text-foreground" />
+                <Label htmlFor="confirm" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Confirm Identity</Label>
+                <Input id="confirm" type="password" placeholder="Re-enter key" value={confirm} onChange={e => setConfirm(e.target.value)} required className="bg-background/20 border-border rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all font-mono text-foreground" />
               </div>
             </div>
             <div className="pt-2">
@@ -93,7 +93,7 @@ export default function Register() {
                 {loading ? 'RECRUITING...' : 'BEGIN INTEGRATION'}
               </button>
             </div>
-            <p className="text-center text-sm text-muted-foreground/30 font-medium">
+            <p className="text-center text-sm text-muted-foreground font-medium">
               Already integrated? <Link to="/register" className="text-primary hover:text-primary-foreground font-bold transition-colors">Sign In To Forge</Link>
             </p>
           </motion.form>
