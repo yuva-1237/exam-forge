@@ -1,3 +1,4 @@
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, Send, Lightbulb, ArrowRight, MousePointer2 } from 'lucide-react';
 import { io, Socket } from 'socket.io-client';
 import { educationalJokes } from '@/lib/jokes';
