@@ -53,7 +53,7 @@ export default function Landing() {
             variants={itemVariants} 
             className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tight mb-8 leading-[1.1]"
           >
-            Forge Your Future with
+            Master Every Subject with
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-violet-400 to-indigo-400 mt-2 pb-2 text-glow">
               Exam Forge
             </span>

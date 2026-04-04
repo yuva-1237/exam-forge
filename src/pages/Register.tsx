@@ -59,7 +59,7 @@ export default function Register() {
                 📝
               </span>
             </motion.div>
-            <h1 className="text-5xl font-black text-white tracking-tight leading-none mb-4">Join the Forge</h1>
+            <h1 className="text-5xl font-black text-white tracking-tight leading-none mb-4">Begin Your Success Track</h1>
             <p className="text-white/40 font-light text-lg">Initialize your learning journey across 20+ tracks.</p>
           </div>
 

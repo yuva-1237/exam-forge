@@ -53,7 +53,7 @@ export default function Login() {
                 🔐
               </span>
             </motion.div>
-            <h1 className="text-5xl font-black text-white tracking-tight leading-none mb-4">Forge Your Identity</h1>
+            <h1 className="text-5xl font-black text-white tracking-tight leading-none mb-4">Sign in to Your Study Hub</h1>
             <p className="text-white/40 font-light text-lg">Enter your credentials to access the forge.</p>
           </div>
 
