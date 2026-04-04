@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Search, Send, Lightbulb } from 'lucide-react';
+import { Search, Send, Lightbulb, ArrowRight, MousePointer2 } from 'lucide-react';
 import { io, Socket } from 'socket.io-client';
 import { educationalJokes } from '@/lib/jokes';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,8 +6,9 @@ import Navbar from '@/components/Navbar';
 import StatsCard from '@/components/StatsCard';
 import { categories as categoriesDb, attempts as attemptsDb, questions as questionsDb } from '@/lib/db';
 import type { Category, QuizAttempt, DashboardStats } from '@/types';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import CategoryIcon from '@/components/CategoryIcon';
+import { useRef } from 'react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -112,6 +111,20 @@ export default function Dashboard() {
     return () => clearInterval(jokeInterval);
   }, []);
 
+  const targetRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+  });
+
+  const filteredCats = cats.filter(c => 
+    c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    c.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Map vertical scroll progress to horizontal translation
+  // We'll calculate the translate amount based on the number of filtered categories
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", `-${Math.max(0, (filteredCats.length * 300 + (filteredCats.length - 1) * 24) - (typeof window !== 'undefined' ? window.innerWidth : 1000))}px`]);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -209,44 +222,69 @@ export default function Dashboard() {
           </motion.div>
         </div>
 
-        {/* Categories */}
-        <motion.div initial="hidden" animate="visible" variants={containerVariants} className="pt-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-            <motion.h2 variants={itemVariants} className="text-2xl font-bold text-foreground">Start a Quiz</motion.h2>
-            <motion.div variants={itemVariants} className="relative w-full sm:w-72">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search subjects..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-card border-2 border-border/80 rounded-xl text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all font-medium placeholder:text-muted-foreground/70"
-              />
-            </motion.div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {cats.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()) || c.description.toLowerCase().includes(searchQuery.toLowerCase())).map(cat => (
-              <motion.div key={cat.id} variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} transition={{ type: "spring", stiffness: 300 }}>
-                <Link
-                  to={`/quiz/${cat.id}`}
-                  className="block h-full rounded-2xl border-2 border-border/80 bg-card p-6 hover:shadow-lg hover:border-primary/50 transition-all group"
-                >
-                  <CategoryIcon 
-                    icon={cat.icon} 
-                    className="text-4xl h-[40px] w-auto block mb-4 drop-shadow-sm transition-transform group-hover:scale-110 group-hover:-rotate-3 duration-300 origin-bottom-left" 
-                  />
-                  <h3 className="text-lg font-bold text-card-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{cat.description}</p>
-                  <div className="mt-4 inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary">
-                    {cat.questionCount} questions
+        {/* Categories Section with Horizontal Scroll on Vertical Scroll */}
+        <section ref={targetRef} className="relative h-[300vh]">
+          <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+            <div className="container mx-auto px-4 mb-8">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={containerVariants}>
+                  <motion.h2 variants={itemVariants} className="text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-3">
+                    Start a Quiz <ArrowRight className="text-primary w-6 h-6" />
+                  </motion.h2>
+                  <motion.p variants={itemVariants} className="text-muted-foreground text-sm mt-1 flex items-center gap-1">
+                    <MousePointer2 className="w-3 h-3" /> Scroll down to explore subjects horizontally
+                  </motion.p>
+                </motion.div>
+                <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={containerVariants} className="relative w-full sm:w-72">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Search className="h-5 w-5 text-muted-foreground" />
                   </div>
-                </Link>
+                  <input
+                    type="text"
+                    placeholder="Search subjects..."
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 bg-card border-2 border-border/80 rounded-xl text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all font-medium placeholder:text-muted-foreground/70"
+                  />
+                </motion.div>
+              </div>
+            </div>
+
+            <div className="flex items-center">
+              <motion.div style={{ x }} className="flex gap-6 px-4 cursor-grab active:cursor-grabbing">
+                {filteredCats.map(cat => (
+                  <motion.div 
+                    key={cat.id} 
+                    className="w-[300px] shrink-0"
+                    whileHover={{ y: -10, scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <Link
+                      to={`/quiz/${cat.id}`}
+                      className="block h-full rounded-3xl border-2 border-border/80 bg-card p-8 hover:shadow-2xl hover:border-primary/50 transition-all group relative overflow-hidden"
+                    >
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-primary/10 transition-colors" />
+                      <CategoryIcon 
+                        icon={cat.icon} 
+                        className="text-5xl h-[50px] w-auto block mb-6 drop-shadow-md transition-transform group-hover:scale-110 group-hover:-rotate-6 duration-500 origin-bottom-left" 
+                      />
+                      <h3 className="text-xl font-bold text-card-foreground group-hover:text-primary transition-colors tracking-tight">{cat.name}</h3>
+                      <p className="text-sm text-muted-foreground mt-3 leading-relaxed min-h-[60px] line-clamp-3">{cat.description}</p>
+                      <div className="mt-6 flex items-center justify-between">
+                        <div className="inline-flex items-center text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-full bg-primary/10 text-primary">
+                          {cat.questionCount} Questions
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                          <ArrowRight className="w-4 h-4" />
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
               </motion.div>
-            ))}
+            </div>
           </div>
-        </motion.div>
+        </section>
 
         {/* History */}
         {history.length > 0 && (
