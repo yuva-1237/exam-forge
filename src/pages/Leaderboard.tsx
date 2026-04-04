@@ -1,7 +1,21 @@
 import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
-import { attempts as attemptsDb, users as usersDb, categories as categoriesDb } from '@/lib/db';
+import { attempts as attemptsDb, users as usersDb } from '@/lib/db';
 import type { LeaderboardEntry } from '@/types';
+import { motion } from 'framer-motion';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
 
 export default function Leaderboard() {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
@@ -35,43 +49,87 @@ export default function Leaderboard() {
   const medals = ['🥇', '🥈', '🥉'];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden pb-20">
+      {/* Dynamic Background Glows */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-violet-600/10 rounded-full blur-[100px]" />
+      </div>
+
       <Navbar />
-      <div className="container mx-auto px-4 py-8 space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">🏆 Leaderboard</h1>
-          <p className="text-muted-foreground mt-1">Top performers ranked by average score</p>
-        </div>
+      
+      <div className="container mx-auto px-4 pt-32 space-y-12 relative z-10">
+        <motion.div initial="hidden" animate="visible" variants={containerVariants}>
+          <motion.h1 variants={itemVariants} className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none mb-4">
+             Hall of <span className="text-primary text-glow">Forgers</span>
+          </motion.h1>
+          <motion.p variants={itemVariants} className="text-white/40 font-light text-lg">
+             The absolute elite ranked by precision and consistency.
+          </motion.p>
+        </motion.div>
 
         {entries.length === 0 ? (
-          <div className="text-center py-16 text-muted-foreground">No quiz attempts yet. Be the first!</div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-24 text-white/20 italic font-light text-xl">
+             No transmissions recorded yet.
+          </motion.div>
         ) : (
-          <div className="rounded-lg border border-border overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-muted">
-                <tr>
-                  <th className="text-left p-3 font-medium text-muted-foreground w-16">Rank</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Name</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Avg Score</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground hidden sm:table-cell">Quizzes</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground hidden md:table-cell">Total Points</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground hidden md:table-cell">Best Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {entries.map((e, i) => (
-                  <tr key={e.userId} className="border-t border-border hover:bg-muted/50">
-                    <td className="p-3 text-foreground font-semibold">{medals[i] || i + 1}</td>
-                    <td className="p-3 text-foreground font-medium">{e.userName}</td>
-                    <td className="p-3 text-foreground font-bold">{e.avgScore}%</td>
-                    <td className="p-3 text-muted-foreground hidden sm:table-cell">{e.totalAttempts}</td>
-                    <td className="p-3 text-muted-foreground hidden md:table-cell">{e.totalScore}</td>
-                    <td className="p-3 text-muted-foreground hidden md:table-cell">{e.bestScore}</td>
+          <motion.div 
+            initial="hidden" 
+            animate="visible" 
+            variants={containerVariants}
+            className="glass-card rounded-[2.5rem] overflow-hidden shadow-2xl"
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-white/5 border-b border-white/5">
+                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-white/30 w-24">Rank</th>
+                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-white/30">Candidate</th>
+                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-white/30">Efficiency</th>
+                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-white/30 hidden sm:table-cell text-center">Track Count</th>
+                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-white/30 hidden md:table-cell">Total Kinetic Points</th>
+                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-white/30 hidden md:table-cell">Peak Performance</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {entries.map((e, i) => (
+                    <motion.tr 
+                      key={e.userId} 
+                      variants={itemVariants}
+                      className="hover:bg-white/[0.02] transition-colors group"
+                    >
+                      <td className="p-6 font-black text-2xl text-white/20 group-hover:text-primary transition-colors">
+                        {medals[i] || `${i + 1}.`}
+                      </td>
+                      <td className="p-6">
+                        <div className="flex flex-col">
+                           <span className="font-bold text-white group-hover:text-glow transition-all text-lg">{e.userName}</span>
+                           <span className="text-[10px] text-white/20 uppercase font-black tracking-tighter">Verified Agent</span>
+                        </div>
+                      </td>
+                      <td className="p-6">
+                         <div className="flex items-center gap-4">
+                            <span className="font-black text-2xl text-primary text-glow">{e.avgScore}%</span>
+                            <div className="h-1.5 w-20 bg-white/5 rounded-full overflow-hidden hidden lg:block">
+                               <div className="h-full bg-primary shadow-[0_0_10px_hsl(var(--primary))]" style={{ width: `${e.avgScore}%` }} />
+                            </div>
+                         </div>
+                      </td>
+                      <td className="p-6 text-center text-white/40 font-bold hidden sm:table-cell">
+                         {e.totalAttempts}
+                      </td>
+                      <td className="p-6 text-white/40 font-medium hidden md:table-cell">
+                         {e.totalScore.toLocaleString()} pts
+                      </td>
+                      <td className="p-6 text-white/20 font-black text-xs hidden md:table-cell">
+                         {e.bestScore}% PEAK
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
         )}
       </div>
     </div>

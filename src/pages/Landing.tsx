@@ -22,88 +22,107 @@ export default function Landing() {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-background overflow-hidden relative">
-      {/* Background embellishments */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/15 rounded-full blur-[100px] pointer-events-none" />
+    <div className="min-h-screen bg-background overflow-x-hidden relative">
+      {/* Dynamic Background Glows */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-violet-600/10 rounded-full blur-[100px]" />
+      </div>
       
       <Navbar />
 
-      {/* Hero */}
-      <section className="container flex flex-col items-center justify-center min-h-[75vh] mx-auto px-4 py-20 text-center relative z-10">
+      {/* Hero Section */}
+      <section className="container relative z-10 flex flex-col items-center justify-center min-h-screen mx-auto px-4 pt-32 pb-20 text-center">
         <motion.div 
-          className="max-w-4xl mx-auto flex flex-col items-center"
+          className="max-w-5xl mx-auto flex flex-col items-center"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          <motion.div variants={itemVariants} className="inline-block text-7xl mb-8 drop-shadow-2xl hover:scale-110 transition-transform cursor-default duration-300">🧠</motion.div>
-          <motion.h1 variants={itemVariants} className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-foreground tracking-tight mb-8 leading-tight">
-            Master Any Subject with
-            <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 block mt-4 pb-4">Exam Forge</span>
+          <motion.div 
+            variants={itemVariants} 
+            className="relative mb-12 group"
+          >
+            <div className="absolute inset-0 bg-primary/30 blur-3xl rounded-full scale-150 opacity-50 group-hover:opacity-80 transition-opacity" />
+            <span className="relative text-8xl md:text-9xl block drop-shadow-2xl hover:scale-110 transition-transform cursor-default duration-500">
+              🧠
+            </span>
+          </motion.div>
+
+          <motion.h1 
+            variants={itemVariants} 
+            className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tight mb-8 leading-[1.1]"
+          >
+            Forge Your Future with
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-violet-400 to-indigo-400 mt-2 pb-2 text-glow">
+              Exam Forge
+            </span>
           </motion.h1>
-          <motion.p variants={itemVariants} className="text-lg md:text-xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed px-4">
-            A production-grade quiz platform with timed exams, instant scoring, leaderboards, and comprehensive analytics. Built for serious learners.
+
+          <motion.p 
+            variants={itemVariants} 
+            className="text-xl md:text-2xl text-white/60 mb-12 max-w-2xl mx-auto leading-relaxed font-light"
+          >
+            The world's most immersive quiz platform. Timed exams, real-time community, and deep analytics designed for the modern learner.
           </motion.p>
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full sm:w-auto">
+
+          <motion.div 
+            variants={itemVariants} 
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full"
+          >
             {user ? (
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
-                <Link to="/dashboard" className="flex items-center justify-center rounded-xl bg-primary px-10 py-4 text-lg font-bold text-primary-foreground shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all w-full">
-                  Go to Dashboard →
-                </Link>
-              </motion.div>
+              <Link to="/dashboard" className="glass px-12 py-5 rounded-2xl text-xl font-bold text-white hover:bg-white/10 hover:scale-105 transition-all shadow-[0_0_30px_rgba(139,92,246,0.2)]">
+                Enter Dashboard →
+              </Link>
             ) : (
               <>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
-                  <Link to="/register" className="flex items-center justify-center rounded-xl bg-primary px-10 py-4 text-lg font-bold text-primary-foreground shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all w-full">
-                    Get Started Free
-                  </Link>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
-                  <Link to="/login" className="flex items-center justify-center rounded-xl border-2 border-border/80 bg-background/50 backdrop-blur-sm px-10 py-4 text-lg font-bold text-foreground hover:bg-card hover:border-primary/50 transition-all w-full">
-                    Sign In
-                  </Link>
-                </motion.div>
+                <Link to="/register" className="bg-primary px-12 py-5 rounded-2xl text-xl font-bold text-white shadow-[0_0_40px_rgba(139,92,246,0.4)] hover:bg-primary/90 hover:scale-105 transition-all">
+                  Get Started Free
+                </Link>
+                <Link to="/login" className="glass px-12 py-5 rounded-2xl text-xl font-bold text-white/80 hover:text-white hover:bg-white/5 transition-all border-white/5">
+                  Sign In
+                </Link>
               </>
             )}
           </motion.div>
         </motion.div>
       </section>
 
-      {/* Features */}
-      <section className="container mx-auto px-4 py-24 relative z-10">
+      {/* Bento Features Grid */}
+      <section className="container mx-auto px-4 py-32 relative z-10">
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-6 gap-6 max-w-7xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
           {[
-            { icon: '⏱️', title: 'Timed Exams', desc: 'Real exam conditions with countdown timer and auto-submit' },
-            { icon: '📊', title: 'Instant Analytics', desc: 'Detailed score breakdown, history tracking, and performance trends' },
-            { icon: '🏆', title: 'Leaderboard', desc: 'Compete with others and track your ranking across categories' },
-            { icon: '🔒', title: 'Anti-Cheat', desc: 'Tab-switch detection with warnings to maintain exam integrity' },
-            { icon: '🎯', title: 'Difficulty Levels', desc: 'Easy, medium, and hard questions with negative marking support' },
-            { icon: '💬', title: 'Global Live Chat', desc: 'Discuss questions, share code, and connect with other learners instantly in real-time' },
+            { icon: '⏱️', title: 'Timed Exams', desc: 'Real conditions with auto-submit.', col: 'md:col-span-3' },
+            { icon: '📊', title: 'Analytics', desc: 'Detailed score breakdown & trends.', col: 'md:col-span-3' },
+            { icon: '🏆', title: 'Leaderboard', desc: 'Rank against the community.', col: 'md:col-span-2' },
+            { icon: '💬', title: 'Live Chat', desc: 'Real-time global study community.', col: 'md:col-span-4' },
+            { icon: '🎯', title: 'Subjects', desc: '20+ specialized quiz categories.', col: 'md:col-span-3' },
+            { icon: '🔒', title: 'Anti-Cheat', desc: 'Active tab tracking & warnings.', col: 'md:col-span-3' },
           ].map((f) => (
             <motion.div 
               key={f.title} 
               variants={itemVariants}
-              whileHover={{ y: -10 }}
-              className="group rounded-2xl border border-border/60 bg-card/40 backdrop-blur-md p-8 text-center hover:shadow-2xl hover:shadow-primary/10 transition-all hover:bg-card/80 hover:border-primary/30"
+              className={`${f.col} glass-card rounded-3xl p-8 flex flex-col items-center text-center group`}
             >
-              <div className="text-5xl mb-6 transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 inline-block">{f.icon}</div>
-              <h3 className="text-xl font-bold text-card-foreground mb-3">{f.title}</h3>
-              <p className="text-base text-muted-foreground leading-relaxed">{f.desc}</p>
+              <div className="text-6xl mb-6 transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">{f.icon}</div>
+              <h3 className="text-2xl font-bold text-white mb-3 text-glow">{f.title}</h3>
+              <p className="text-white/60 leading-relaxed font-light">{f.desc}</p>
             </motion.div>
           ))}
         </motion.div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 py-10 text-center text-sm text-muted-foreground mt-20 relative z-10 bg-background/50 backdrop-blur-sm">
-        <p>Exam Forge — Premium quiz platform. Admin: admin@mcq.com / Admin123!</p>
+      <footer className="border-t border-white/5 py-20 text-center relative z-10">
+        <p className="text-white/30 text-sm tracking-widest uppercase">
+          Exam Forge — Premium Education Architecture
+        </p>
       </footer>
     </div>
   );
