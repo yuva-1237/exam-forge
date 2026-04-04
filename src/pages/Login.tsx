@@ -53,8 +53,8 @@ export default function Login() {
                 🔐
               </span>
             </motion.div>
-            <h1 className="text-5xl font-black text-white tracking-tight leading-none mb-4">Sign in to Your Study Hub</h1>
-            <p className="text-white/40 font-light text-lg">Enter your credentials to access the forge.</p>
+            <h1 className="text-5xl font-black text-foreground tracking-tight leading-none mb-4">Sign in to Your Study Hub</h1>
+            <p className="text-muted-foreground font-light text-lg">Enter your credentials to access the forge.</p>
           </div>
 
           <motion.form 
@@ -65,17 +65,17 @@ export default function Login() {
             className="glass-card p-10 rounded-[2.5rem] space-y-6 shadow-2xl"
           >
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Access Protocol (Email)</Label>
-              <Input id="email" type="email" placeholder="agent@forge.com" value={email} onChange={e => setEmail(e.target.value)} required maxLength={255} className="bg-white/5 border-white/5 rounded-2xl h-14 px-6 focus:border-primary/40 focus:bg-white/10 transition-all" />
+              <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 ml-1">Access Protocol (Email)</Label>
+              <Input id="email" type="email" placeholder="agent@forge.com" value={email} onChange={e => setEmail(e.target.value)} required maxLength={255} className="bg-background/20 border-border/10 rounded-2xl h-14 px-6 focus:border-primary/40 focus:bg-background/40 transition-all text-foreground" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" title="Encryption Key (Password)" className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Encryption Key (Password)</Label>
-              <Input id="password" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required maxLength={128} className="bg-white/5 border-white/5 rounded-2xl h-14 px-6 focus:border-primary/40 focus:bg-white/10 transition-all font-mono" />
+              <Label htmlFor="password" title="Encryption Key (Password)" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 ml-1">Encryption Key (Password)</Label>
+              <Input id="password" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required maxLength={128} className="bg-background/20 border-border/10 rounded-2xl h-14 px-6 focus:border-primary/40 focus:bg-background/40 transition-all font-mono text-foreground" />
             </div>
-            <button type="submit" disabled={loading} className="w-full h-14 rounded-2xl bg-primary text-white font-black text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-30 shadow-[0_0_30px_rgba(139,92,246,0.3)]">
+            <button type="submit" disabled={loading} className="w-full h-14 rounded-2xl bg-primary text-white font-black text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-30 shadow-lg dark:shadow-[0_0_30px_rgba(139,92,246,0.3)]">
               {loading ? 'SYNCHRONIZING...' : 'INITIALIZE ACCESS'}
             </button>
-            <p className="text-center text-sm text-white/30 font-medium">
+            <p className="text-center text-sm text-muted-foreground/30 font-medium">
               New recruit? <Link to="/register" className="text-primary hover:text-primary-foreground font-bold transition-colors">Apply For Integration</Link>
             </p>
           </motion.form>

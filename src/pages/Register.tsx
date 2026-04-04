@@ -59,8 +59,8 @@ export default function Register() {
                 📝
               </span>
             </motion.div>
-            <h1 className="text-5xl font-black text-white tracking-tight leading-none mb-4">Begin Your Success Track</h1>
-            <p className="text-white/40 font-light text-lg">Initialize your learning journey across 20+ tracks.</p>
+            <h1 className="text-5xl font-black text-foreground tracking-tight leading-none mb-4">Begin Your Success Track</h1>
+            <p className="text-muted-foreground font-light text-lg">Initialize your learning journey across 20+ tracks.</p>
           </div>
 
           <motion.form 
@@ -71,30 +71,30 @@ export default function Register() {
             className="glass-card p-10 rounded-[2.5rem] space-y-5 shadow-2xl"
           >
             <div className="space-y-1">
-              <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Full Designation</Label>
-              <Input id="name" placeholder="John Doe" value={name} onChange={e => setName(e.target.value)} required minLength={2} maxLength={100} className="bg-white/5 border-white/5 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-white/10 transition-all font-medium" />
+              <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 ml-1">Full Designation</Label>
+              <Input id="name" placeholder="John Doe" value={name} onChange={e => setName(e.target.value)} required minLength={2} maxLength={100} className="bg-background/20 border-border/10 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all font-medium text-foreground" />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Access Channel (Email)</Label>
-              <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required maxLength={255} className="bg-white/5 border-white/5 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-white/10 transition-all" />
+              <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 ml-1">Access Channel (Email)</Label>
+              <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required maxLength={255} className="bg-background/20 border-border/10 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all text-foreground" />
             </div>
             <div className="grid grid-cols-1 gap-4">
               <div className="space-y-1">
-                <Label htmlFor="password" title="Encryption Key (Password)" className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Security Key</Label>
-                <Input id="password" type="password" placeholder="Min 8 chars" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} maxLength={128} className="bg-white/5 border-white/5 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-white/10 transition-all font-mono" />
+                <Label htmlFor="password" title="Encryption Key (Password)" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 ml-1">Security Key</Label>
+                <Input id="password" type="password" placeholder="Min 8 chars" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} maxLength={128} className="bg-background/20 border-border/10 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all font-mono text-foreground" />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="confirm" className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Confirm Identity</Label>
-                <Input id="confirm" type="password" placeholder="Re-enter key" value={confirm} onChange={e => setConfirm(e.target.value)} required className="bg-white/5 border-white/5 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-white/10 transition-all font-mono" />
+                <Label htmlFor="confirm" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 ml-1">Confirm Identity</Label>
+                <Input id="confirm" type="password" placeholder="Re-enter key" value={confirm} onChange={e => setConfirm(e.target.value)} required className="bg-background/20 border-border/10 rounded-2xl h-12 px-6 focus:border-primary/40 focus:bg-background/40 transition-all font-mono text-foreground" />
               </div>
             </div>
             <div className="pt-2">
-              <button type="submit" disabled={loading} className="w-full h-14 rounded-2xl bg-primary text-white font-black text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-30 shadow-[0_0_30px_rgba(139,92,246,0.3)]">
+              <button type="submit" disabled={loading} className="w-full h-14 rounded-2xl bg-primary text-white font-black text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-30 shadow-lg dark:shadow-[0_0_30px_rgba(139,92,246,0.3)]">
                 {loading ? 'RECRUITING...' : 'BEGIN INTEGRATION'}
               </button>
             </div>
-            <p className="text-center text-sm text-white/30 font-medium">
-              Already integrated? <Link to="/login" className="text-primary hover:text-primary-foreground font-bold transition-colors">Sign In To Forge</Link>
+            <p className="text-center text-sm text-muted-foreground/30 font-medium">
+              Already integrated? <Link to="/register" className="text-primary hover:text-primary-foreground font-bold transition-colors">Sign In To Forge</Link>
             </p>
           </motion.form>
         </div>

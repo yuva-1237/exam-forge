@@ -51,7 +51,7 @@ export default function Landing() {
 
           <motion.h1 
             variants={itemVariants} 
-            className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tight mb-8 leading-[1.1]"
+            className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground tracking-tight mb-8 leading-[1.1]"
           >
             Master Every Subject with
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-violet-400 to-indigo-400 mt-2 pb-2 text-glow">
@@ -61,7 +61,7 @@ export default function Landing() {
 
           <motion.p 
             variants={itemVariants} 
-            className="text-xl md:text-2xl text-white/60 mb-12 max-w-2xl mx-auto leading-relaxed font-light"
+            className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed font-light"
           >
             The world's most immersive quiz platform. Timed exams, real-time community, and deep analytics designed for the modern learner.
           </motion.p>
@@ -71,15 +71,15 @@ export default function Landing() {
             className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full"
           >
             {user ? (
-              <Link to="/dashboard" className="glass px-12 py-5 rounded-2xl text-xl font-bold text-white hover:bg-white/10 hover:scale-105 transition-all shadow-[0_0_30px_rgba(139,92,246,0.2)]">
+              <Link to="/dashboard" className="glass px-12 py-5 rounded-2xl text-xl font-bold text-foreground hover:bg-foreground/5 hover:scale-105 transition-all shadow-xl dark:shadow-[0_0_30px_rgba(139,92,246,0.2)]">
                 Enter Dashboard →
               </Link>
             ) : (
               <>
-                <Link to="/register" className="bg-primary px-12 py-5 rounded-2xl text-xl font-bold text-white shadow-[0_0_40px_rgba(139,92,246,0.4)] hover:bg-primary/90 hover:scale-105 transition-all">
+                <Link to="/register" className="bg-primary px-12 py-5 rounded-2xl text-xl font-bold text-white shadow-xl dark:shadow-[0_0_40px_rgba(139,92,246,0.4)] hover:bg-primary/90 hover:scale-105 transition-all">
                   Get Started Free
                 </Link>
-                <Link to="/login" className="glass px-12 py-5 rounded-2xl text-xl font-bold text-white/80 hover:text-white hover:bg-white/5 transition-all border-white/5">
+                <Link to="/login" className="glass px-12 py-5 rounded-2xl text-xl font-bold text-foreground/80 hover:text-foreground hover:bg-foreground/5 transition-all border-border/10">
                   Sign In
                 </Link>
               </>
@@ -111,16 +111,16 @@ export default function Landing() {
               className={`${f.col} glass-card rounded-3xl p-8 flex flex-col items-center text-center group`}
             >
               <div className="text-6xl mb-6 transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">{f.icon}</div>
-              <h3 className="text-2xl font-bold text-white mb-3 text-glow">{f.title}</h3>
-              <p className="text-white/60 leading-relaxed font-light">{f.desc}</p>
+              <h3 className="text-2xl font-bold text-foreground mb-3 text-glow">{f.title}</h3>
+              <p className="text-muted-foreground leading-relaxed font-light">{f.desc}</p>
             </motion.div>
           ))}
         </motion.div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-20 text-center relative z-10">
-        <p className="text-white/30 text-sm tracking-widest uppercase">
+      <footer className="border-t border-border/5 py-20 text-center relative z-10">
+        <p className="text-muted-foreground text-sm tracking-widest uppercase">
           Exam Forge — Premium Education Architecture
         </p>
       </footer>
